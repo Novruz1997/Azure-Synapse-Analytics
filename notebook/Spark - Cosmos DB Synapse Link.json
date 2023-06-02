@@ -1,0 +1,439 @@
+{
+	"name": "Spark - Cosmos DB Synapse Link",
+	"properties": {
+		"nbformat": 4,
+		"nbformat_minor": 2,
+		"bigDataPool": {
+			"referenceName": "PSSparkPool",
+			"type": "BigDataPoolReference"
+		},
+		"sessionProperties": {
+			"driverMemory": "28g",
+			"driverCores": 4,
+			"executorMemory": "28g",
+			"executorCores": 4,
+			"numExecutors": 2,
+			"runAsWorkspaceSystemIdentity": false,
+			"conf": {
+				"spark.dynamicAllocation.enabled": "false",
+				"spark.dynamicAllocation.minExecutors": "2",
+				"spark.dynamicAllocation.maxExecutors": "2",
+				"spark.autotune.trackingId": "d12b5641-211b-4273-8982-d6e4f9c7a64b"
+			}
+		},
+		"metadata": {
+			"saveOutput": true,
+			"synapse_widget": {
+				"version": "0.1",
+				"state": {
+					"a2adc120-ed17-4158-8f17-9778ccafd005": {
+						"type": "Synapse.DataFrame",
+						"sync_state": {
+							"table": {
+								"rows": [
+									{
+										"0": "VNs8AM2ubDYBAAAAAAAAAA==",
+										"1": "1685714948",
+										"2": "11",
+										"3": "Novruz",
+										"4": [
+											{
+												"size": "M"
+											},
+											{
+												"amount": 22
+											}
+										],
+										"5": {
+											"Location": "FL",
+											"lat": 44.33
+										},
+										"6": "\"3d03548e-0000-0100-0000-6479f8040000\""
+									},
+									{
+										"0": "VNs8AM2ubDYCAAAAAAAAAA==",
+										"1": "1685714979",
+										"2": "23",
+										"3": "Kanan",
+										"4": [
+											{
+												"size": "L"
+											},
+											{
+												"amount": 66
+											}
+										],
+										"5": {
+											"Location": "Bos",
+											"lat": 44.33
+										},
+										"6": "\"3d03f6a0-0000-0100-0000-6479f8230000\""
+									}
+								],
+								"schema": [
+									{
+										"key": "0",
+										"name": "_rid",
+										"type": "string"
+									},
+									{
+										"key": "1",
+										"name": "_ts",
+										"type": "bigint"
+									},
+									{
+										"key": "2",
+										"name": "id",
+										"type": "string"
+									},
+									{
+										"key": "3",
+										"name": "name",
+										"type": "string"
+									},
+									{
+										"key": "4",
+										"name": "details",
+										"type": "ArrayType(StructType(StructField(size,StringType,true),StructField(amount,LongType,true)),true)"
+									},
+									{
+										"key": "5",
+										"name": "origin",
+										"type": "StructType(StructField(Location,StringType,true),StructField(lat,DoubleType,true))"
+									},
+									{
+										"key": "6",
+										"name": "_etag",
+										"type": "string"
+									}
+								],
+								"truncated": false
+							},
+							"isSummary": false,
+							"language": "scala"
+						},
+						"persist_state": {
+							"view": {
+								"type": "details",
+								"chartOptions": {
+									"chartType": "bar",
+									"aggregationType": "sum",
+									"categoryFieldKeys": [
+										"0"
+									],
+									"seriesFieldKeys": [
+										"1"
+									],
+									"isStacked": false
+								}
+							}
+						}
+					},
+					"54aa1926-bce4-4e83-a7d7-5d55675acf5c": {
+						"type": "Synapse.DataFrame",
+						"sync_state": {
+							"table": {
+								"rows": [
+									{
+										"0": "11",
+										"1": "Novruz",
+										"2": "M",
+										"3": "22",
+										"4": "44.33",
+										"5": "FL"
+									},
+									{
+										"0": "23",
+										"1": "Kanan",
+										"2": "L",
+										"3": "66",
+										"4": "44.33",
+										"5": "Bos"
+									}
+								],
+								"schema": [
+									{
+										"key": "0",
+										"name": "id",
+										"type": "string"
+									},
+									{
+										"key": "1",
+										"name": "name",
+										"type": "string"
+									},
+									{
+										"key": "2",
+										"name": "size",
+										"type": "string"
+									},
+									{
+										"key": "3",
+										"name": "amount",
+										"type": "bigint"
+									},
+									{
+										"key": "4",
+										"name": "latitude",
+										"type": "double"
+									},
+									{
+										"key": "5",
+										"name": "location",
+										"type": "string"
+									}
+								],
+								"truncated": false
+							},
+							"isSummary": false,
+							"language": "scala"
+						},
+						"persist_state": {
+							"view": {
+								"type": "details",
+								"chartOptions": {
+									"chartType": "bar",
+									"aggregationType": "sum",
+									"categoryFieldKeys": [
+										"0"
+									],
+									"seriesFieldKeys": [
+										"3"
+									],
+									"isStacked": false
+								}
+							}
+						}
+					}
+				}
+			},
+			"enableDebugMode": false,
+			"kernelspec": {
+				"name": "synapse_pyspark",
+				"display_name": "Synapse PySpark"
+			},
+			"language_info": {
+				"name": "python"
+			},
+			"a365ComputeOptions": {
+				"id": "/subscriptions/ae95e5eb-a461-45d6-a586-9c7b9f44daa8/resourceGroups/synapse-course-rg/providers/Microsoft.Synapse/workspaces/synapse-course-udemy-workspace/bigDataPools/PSSparkPool",
+				"name": "PSSparkPool",
+				"type": "Spark",
+				"endpoint": "https://synapse-course-udemy-workspace.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/PSSparkPool",
+				"auth": {
+					"type": "AAD",
+					"authResource": "https://dev.azuresynapse.net",
+					"authHeader": null
+				},
+				"sparkVersion": "3.3",
+				"nodeCount": 3,
+				"cores": 4,
+				"memory": 28,
+				"extraHeader": null
+			},
+			"sessionKeepAliveTimeout": 30
+		},
+		"cells": [
+			{
+				"cell_type": "code",
+				"metadata": {
+					"collapsed": false
+				},
+				"source": [
+					"# Read from Cosmos DB analytical store into a Spark DataFrame and display 10 rows from the DataFrame\n",
+					"# To select a preferred list of regions in a multi-region Cosmos DB account, add .option(\"spark.cosmos.preferredRegions\", \"<Region1>,<Region2>\")\n",
+					"\n",
+					"df = spark.read\\\n",
+					"    .format(\"cosmos.olap\")\\\n",
+					"    .option(\"spark.synapse.linkedService\", \"CosmosDBLScosmosdb1\")\\\n",
+					"    .option(\"spark.cosmos.container\", \"test1synapsecontainer\")\\\n",
+					"    .load()\n",
+					"\n",
+					"display(df.limit(10))"
+				],
+				"execution_count": 1
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					},
+					"collapsed": false
+				},
+				"source": [
+					"from pyspark.sql.functions import *\r\n",
+					"\r\n",
+					"df2 = (\r\n",
+					"    df\r\n",
+					"        .withColumn('size', col('details')[0].size)\r\n",
+					"        .withColumn('amount', col('details')[1].amount)\r\n",
+					"        .withColumn('latitude', col('origin').lat)\r\n",
+					"        .withColumn('location', col('origin').Location)\r\n",
+					"        .select('id', 'name', 'size', 'amount', 'latitude', 'location')\r\n",
+					")\r\n",
+					"\r\n",
+					"\r\n",
+					"display(df2)"
+				],
+				"execution_count": 7
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					},
+					"collapsed": false
+				},
+				"source": [
+					"from pyspark.sql import SparkSession\r\n",
+					"from pyspark.sql.types import StructType, StructField, IntegerType, StringType, ArrayType, MapType\r\n",
+					"\r\n",
+					"# Create a SparkSession\r\n",
+					"spark = SparkSession.builder.getOrCreate()\r\n",
+					"\r\n",
+					"# Define the schema for the complex type\r\n",
+					"schema = StructType([\r\n",
+					"    StructField(\"id\", IntegerType(), nullable=False),\r\n",
+					"    StructField(\"info\", ArrayType(StringType()), nullable=False),\r\n",
+					"    StructField(\"details\", StructType([\r\n",
+					"        StructField(\"name\", StringType(), nullable=False),\r\n",
+					"        StructField(\"age\", IntegerType(), nullable=False)\r\n",
+					"    ]), nullable=False),\r\n",
+					"    StructField(\"preferences\", MapType(StringType(), IntegerType()), nullable=False)\r\n",
+					"])\r\n",
+					"\r\n",
+					"# Sample data\r\n",
+					"data = [\r\n",
+					"    (1, [\"a\", \"b\", \"c\"], (\"John\", 25), {\"preference1\": 10, \"preference2\": 20}),\r\n",
+					"    (2, [\"x\", \"y\", \"z\"], (\"Jane\", 30), {\"preference1\": 15, \"preference2\": 25})\r\n",
+					"]\r\n",
+					"\r\n",
+					"# Create a DataFrame using the defined schema\r\n",
+					"df = spark.createDataFrame(data, schema)\r\n",
+					"\r\n",
+					"# Show the DataFrame\r\n",
+					"df.show(truncate=False)"
+				],
+				"execution_count": 13
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"data"
+				],
+				"execution_count": 22
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"# For Spark 3.1 +\r\n",
+					"# Write TO Comsos DB container_tokens\r\n",
+					"\r\n",
+					"# id Column Should be a String\r\n",
+					"from pyspark.sql.functions import col\r\n",
+					"from pyspark.sql.types import StringType\r\n",
+					"\r\n",
+					"df.withColumn('id', col('id').cast(StringType())) \\\r\n",
+					"    .write \\\r\n",
+					"    .format(\"cosmos.oltp\") \\\r\n",
+					"    .option(\"spark.synapse.linkedService\", \"CosmosDBLScosmosdb1\") \\\r\n",
+					"    .option(\"spark.cosmos.container\", \"test2writeContainer\") \\\r\n",
+					"    .option(\"spark.cosmos.write.strategy\", \"ItemOverwrite\") \\\r\n",
+					"    .option(\"spark.cosmos.write.bulk.enabled\", \"true\") \\\r\n",
+					"    .mode('append') \\\r\n",
+					"    .save()\r\n",
+					""
+				],
+				"execution_count": 20
+			},
+			{
+				"cell_type": "markdown",
+				"metadata": {
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"Above Code Wrote data to the Cosmos DB Container"
+				]
+			},
+			{
+				"cell_type": "markdown",
+				"metadata": {
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					" Example Data in Cosmos DB container \r\n",
+					"\r\n",
+					"```json\r\n",
+					"\r\n",
+					"{\r\n",
+					"    \"id\": \"1\",\r\n",
+					"    \"info\": [\r\n",
+					"        \"a\",\r\n",
+					"        \"b\",\r\n",
+					"        \"c\"\r\n",
+					"    ],\r\n",
+					"    \"details\": {\r\n",
+					"        \"name\": \"John\",\r\n",
+					"        \"age\": 25\r\n",
+					"    },\r\n",
+					"    \"preferences\": {\r\n",
+					"        \"preference1\": 10,\r\n",
+					"        \"preference2\": 20\r\n",
+					"    },\r\n",
+					"    \"_rid\": \"VNs8AIWWVs0BAAAAAAAAAA==\",\r\n",
+					"    \"_self\": \"dbs/VNs8AA==/colls/VNs8AIWWVs0=/docs/VNs8AIWWVs0BAAAAAAAAAA==/\",\r\n",
+					"    \"_etag\": \"\\\"4603c413-0000-0100-0000-647a08150000\\\"\",\r\n",
+					"    \"_attachments\": \"attachments/\",\r\n",
+					"    \"_ts\": 1685719061\r\n",
+					"}\r\n",
+					"```\r\n",
+					" "
+				]
+			}
+		]
+	}
+}

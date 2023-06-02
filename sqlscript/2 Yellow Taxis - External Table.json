@@ -1,0 +1,20 @@
+{
+	"name": "2 Yellow Taxis - External Table",
+	"properties": {
+		"folder": {
+			"name": "Dedicated Sql Pool Scripts"
+		},
+		"content": {
+			"query": "-- We Created this Script from the Data Tab and External Table \n-- ONly Possible for Parquet Files to create from Data Tab\n-- We see we don't have any credentials because it uses the existing credentials.\n\nIF NOT EXISTS (SELECT * FROM sys.external_file_formats WHERE name = 'SynapseParquetFormat') \n\tCREATE EXTERNAL FILE FORMAT [SynapseParquetFormat] \n\tWITH ( FORMAT_TYPE = PARQUET)\nGO\n\nIF NOT EXISTS (SELECT * FROM sys.external_data_sources WHERE name = 'taxidata_synapsedatalakeadls2_dfs_core_windows_net') \n\tCREATE EXTERNAL DATA SOURCE [taxidata_synapsedatalakeadls2_dfs_core_windows_net] \n\tWITH (\n\t\tLOCATION = 'abfss://taxidata@synapsedatalakeadls2.dfs.core.windows.net' \n\t)\nGO\n\nCREATE EXTERNAL TABLE ext.YellowTaxis (\n\t[VendorID] int,\n\t[tpep_pickup_datetime] datetime2(7),\n\t[tpep_dropoff_datetime] datetime2(7),\n\t[passenger_count] int,\n\t[trip_distance] float,\n\t[RatecodeID] int,\n\t[store_and_fwd_flag] nvarchar(4000),\n\t[PULocationID] int,\n\t[DOLocationID] int,\n\t[payment_type] int,\n\t[fare_amount] float,\n\t[extra] float,\n\t[mta_tax] float,\n\t[tip_amount] float,\n\t[tolls_amount] float,\n\t[improvement_surcharge] float,\n\t[total_amount] float,\n\t[congestion_surcharge] float\n\t)\n\tWITH (\n\tLOCATION = 'YellowTaxis_201911.parquet',\n\tDATA_SOURCE = [taxidata_synapsedatalakeadls2_dfs_core_windows_net],\n\tFILE_FORMAT = [SynapseParquetFormat]\n\t)\nGO\n\n\nSELECT TOP 100 * FROM ext.YellowTaxis\nGO\n\n\n\n-- CREATE ACTUAL TABLE FROM EXTERNAL.\n-- This kind of table creation is Called USING CTAS (Polybase)\n-- CTAS MEAN (CREATE TABLE AS)\nCREATE SCHEMA main;\n\nGO\n\nCREATE TABLE main.YellowTaxis\nWITH\n(\n\tDISTRIBUTION = ROUND_ROBIN,\n\tCLUSTERED COLUMNSTORE INDEX\n)\nAS\nSELECT *\nFROM ext.YellowTaxis;\n\n\nGO\n\n\nSELECT TOP 100 * FROM main.YellowTaxis;\n\n\n\n-- How To Write Data TO DataLake\n\n\nCREATE EXTERNAL TABLE ext.ProcessedYellowTaxis\nWITH (\n\tDATA_SOURCE = PSDataLake,\n\tFILE_FORMAT = SynapseParquetFormat,\n\tLOCATION = '/Facts/YellowTaxis.parquet'\n)\nAS\nSELECT \n\tPickupTime = [tpep_pickup_datetime],\n\tDropTime = [tpep_dropoff_datetime],\n\tPassengers = [passenger_count],\n\tTripDistance = [trip_distance],\n\tRateCodeId = [RatecodeID],\n\tPickupLocationId = [PULocationID],\n\tDropLocationId = [DOLocationID],\n\tPaymentTypeId = [payment_type],\n\tTotalAmount = [total_amount]\nFROM main.YellowTaxis y \n\tINNER JOIN ext.TaxiZones z ON y.PULocationID = z.LocationId\nWHERE\n\ttpep_pickup_datetime >= '2019-11-01'\n\tAND [tpep_pickup_datetime] < '2019-12-01'\n\tAND [passenger_count] > 0\n\tAND z.ServiceZone = 'Yellow Zone';\n\n",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"databaseName": "TaxiWarehouse",
+				"poolName": "TaxiWarehouse"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}

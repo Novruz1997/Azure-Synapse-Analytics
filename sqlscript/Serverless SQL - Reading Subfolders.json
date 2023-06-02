@@ -1,0 +1,20 @@
+{
+	"name": "Serverless SQL - Reading Subfolders",
+	"properties": {
+		"folder": {
+			"name": "Serveless SQL Pool - PL"
+		},
+		"content": {
+			"query": "-- This is auto-generated code\nSELECT\n    TOP 100 *\nFROM\n    OPENROWSET(\n        BULK 'https://synapsedatalakeadls2.dfs.core.windows.net/nyc-taxi-data/raw/trip_data_green_parquet/**',\n        FORMAT = 'PARQUET'\n    ) AS [result]\n\n\n-- reading filename and filepath\n\nSELECT\n    TOP 100 \n        TripYear = fhv.filepath(1),\n        TripMonth = fhv.filepath(2),\n        TripDay = fhv.filepath(3),\n        *\nFROM\n    OPENROWSET(\n        BULK 'https://synapsedatalakeadls2.dfs.core.windows.net/taxioutput/Facts/FhvTaxis.parquet/TripYear=*/TripMonth=*/TripDay=*/**',\n        FORMAT = 'PARQUET'\n    ) AS fhv\n\n\n\n-- reading Year, Month, Day from Path\n\n\nSELECT\n    TOP 100 \n        TripYear = fhv.filepath(1),\n        TripMonth = fhv.filepath(2),\n        TripDay = fhv.filepath(3),\n        *\nFROM\n    OPENROWSET(\n        BULK 'https://synapsedatalakeadls2.dfs.core.windows.net/taxioutput/Facts/FhvTaxis.parquet/TripYear=*/TripMonth=*/TripDay=*/**',\n        FORMAT = 'PARQUET'\n    ) AS fhv\n\n\n\n\nSELECT\n    TOP 100 \n        TripYear = fhv.filepath(1),\n        TripMonth = fhv.filepath(2),\n        TripDay = fhv.filepath(3),\n        *\nFROM\n    OPENROWSET(\n        BULK 'https://synapsedatalakeadls2.dfs.core.windows.net/taxioutput/Facts/FhvTaxis.parquet/TripYear=*/TripMonth=*/TripDay=*/**',\n        FORMAT = 'PARQUET'\n    ) AS fhv\nWHERE fhv.filepath(2) = 11;\n\n\n-- Selecting from CSV Files and Manually specify the schema\n\nSELECT\n    TOP 100 *\nFROM\n    OPENROWSET(\n        BULK 'https://synapsedatalakeadls2.dfs.core.windows.net/taxidata/TaxiZones/TaxiZones1.csv',\n        FORMAT = 'CSV',\n        PARSER_VERSION = '2.0',\n        -- Specify header row, because file has header row\n        HEADER_ROW = TRUE\n    )\nWITH (\n    -- numbers indicates the place in the column\n    LocationId INT 1,\n    Borough VARCHAR(100) 2,\n    Zone VARCHAR(100) 3,\n    ServiceZone VARCHAR(100) 4\n) AS zonez\n\n\n\n-- Create new Sql Database\n-- There will not be any option for the tables, because it does not have tables concept in the Serverless Sql Pool.\n\n\n",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"databaseName": "master",
+				"poolName": "Built-in"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}

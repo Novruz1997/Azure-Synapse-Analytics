@@ -1,0 +1,20 @@
+{
+	"name": "Serverless Sql Pool - External Table",
+	"properties": {
+		"folder": {
+			"name": "Serveless SQL Pool - PL"
+		},
+		"content": {
+			"query": "IF NOT EXISTS (SELECT * FROM sys.external_file_formats WHERE name = 'SynapseParquetFormat') \n\tCREATE EXTERNAL FILE FORMAT [SynapseParquetFormat] \n\tWITH ( FORMAT_TYPE = PARQUET)\nGO\n\nIF NOT EXISTS (SELECT * FROM sys.external_data_sources WHERE name = 'taxidata_synapsedatalakeadls2_dfs_core_windows_net') \n\tCREATE EXTERNAL DATA SOURCE [taxidata_synapsedatalakeadls2_dfs_core_windows_net] \n\tWITH (\n\t\tLOCATION = 'abfss://taxidata@synapsedatalakeadls2.dfs.core.windows.net' \n\t)\nGO\n\nCREATE EXTERNAL TABLE YellowTaxisDemo (\n\t[VendorID] int,\n\t[tpep_pickup_datetime] datetime2(7),\n\t[tpep_dropoff_datetime] datetime2(7),\n\t[passenger_count] int,\n\t[trip_distance] float,\n\t[RatecodeID] int,\n\t[store_and_fwd_flag] nvarchar(500),\n\t[PULocationID] int,\n\t[DOLocationID] int,\n\t[payment_type] int,\n\t[fare_amount] float,\n\t[extra] float,\n\t[mta_tax] float,\n\t[tip_amount] float,\n\t[tolls_amount] float,\n\t[improvement_surcharge] float,\n\t[total_amount] float,\n\t[congestion_surcharge] float\n\t)\n\tWITH (\n\tLOCATION = 'YellowTaxis_201911.parquet',\n\tDATA_SOURCE = [taxidata_synapsedatalakeadls2_dfs_core_windows_net],\n\tFILE_FORMAT = [SynapseParquetFormat]\n\t)\nGO\n\n\nSELECT TOP 100 * FROM YellowTaxisDemo\nGO",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"databaseName": "taxis_datamart",
+				"poolName": "Built-in"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}

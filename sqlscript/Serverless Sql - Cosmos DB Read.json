@@ -1,0 +1,20 @@
+{
+	"name": "Serverless Sql - Cosmos DB Read",
+	"properties": {
+		"folder": {
+			"name": "Serveless SQL Pool - PL"
+		},
+		"content": {
+			"query": "\n\nCREATE CREDENTIAL [synapse-cosmos-db-pl]\nWITH IDENTITY = 'SHARED ACCESS SIGNATURE', SECRET = 'NQzDN4N6PMtMJ2pZGsdtdXSPtrfTipDCVZI0IeQZ6nCBmVwHy4iB9NCRmAzbUkgxod58vLM6pvVgACDbWOxJLA=='\n\n\nSELECT TOP 100 *\nFROM OPENROWSET(​PROVIDER = 'CosmosDB',\n                CONNECTION = 'Account=synapse-cosmos-db-pl;Database=cosmosdb1',\n                OBJECT = 'test1synapsecontainer',\n                SERVER_CREDENTIAL = 'synapse-cosmos-db-pl'\n) AS [test1synapsecontainer];\n\nGO\n\n\n\n-- Reading Complex Container\n-- Link for Query from Cosmos DB:  https://learn.microsoft.com/en-us/azure/synapse-analytics/sql/query-cosmos-db-analytical-store?tabs=openrowset-key\nSELECT TOP 100 *\nFROM OPENROWSET(\n    PROVIDER = 'CosmosDB',\n    CONNECTION = 'Account=synapse-cosmos-db-pl;Database=cosmosdb1',\n    OBJECT = 'test1synapsecontainer',\n    SERVER_CREDENTIAL = 'synapse-cosmos-db-pl'\n) \nWITH (\n    Location VARCHAR(100) '$.origin.Location',\n    origin VARCHAR(MAX),\n    Latitude FLOAT '$.origin.lat',\n    id VARCHAR(100),\n    name VARCHAR(100),\n    details VARCHAR(MAX)\n)\nAS [test1synapsecontainer]\nCROSS APPLY OPENJSON ( details )\nWITH (\n    size VARCHAR(10),\n    amount FLOAT\n) AS nested_array\n",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"databaseName": "master",
+				"poolName": "Built-in"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}

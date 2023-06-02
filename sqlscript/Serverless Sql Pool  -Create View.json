@@ -1,0 +1,20 @@
+{
+	"name": "Serverless Sql Pool  -Create View",
+	"properties": {
+		"folder": {
+			"name": "Serveless SQL Pool - PL"
+		},
+		"content": {
+			"query": "CREATE SCHEMA dim;\n\n\nGO \nCREATE VIEW dim.YelloTaxis\nAS\nSELECT *\nFROM\n    OPENROWSET(\n        BULK 'https://synapsedatalakeadls2.dfs.core.windows.net/taxidata/YellowTaxis_201911.parquet',\n        FORMAT = 'PARQUET'\n    ) AS YellowTaxis\n\nGO \n\n\nSELECT * FROM dim.YelloTaxis\n\n\n",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"databaseName": "taxis_datamart",
+				"poolName": "Built-in"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}

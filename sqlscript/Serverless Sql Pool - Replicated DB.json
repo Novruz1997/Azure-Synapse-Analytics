@@ -1,0 +1,20 @@
+{
+	"name": "Serverless Sql Pool - Replicated DB",
+	"properties": {
+		"folder": {
+			"name": "Serveless SQL Pool - PL"
+		},
+		"content": {
+			"query": "SELECT TOP (100) [CompanyLisenceId]\n,[BaseLisenceId]\n,[PickupTime]\n,[DropTime]\n,[PickupLocationId]\n,[DropLocationId]\n,[TripYear]\n,[TripMonth]\n,[TripDay]\n FROM [fhvwarehouse].[dbo].[fhvtrips]\n\n\n -- Serverless Sql Pool Cannot query Spark Tables. \n -- But it can Query Replicated DB.\n\n\n USE taxis_datamart;\n\n\n GO \n\n\nCREATE VIEW dbo.FHVBases\nAS \n    SELECT TOP (100) [CompanyLisenceId]\n        ,[BaseLisenceId]\n        ,[PickupTime]\n        ,[DropTime]\n        ,[PickupLocationId]\n        ,[DropLocationId]\n        ,[TripYear]\n        ,[TripMonth]\n        ,[TripDay]\n    FROM [fhvwarehouse].[dbo].[fhvtrips]\n\n\nGO \n\n\nSELECT * FROM dbo.FHVBases\n",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"databaseName": "taxis_datamart",
+				"poolName": "Built-in"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}

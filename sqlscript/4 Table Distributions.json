@@ -1,0 +1,20 @@
+{
+	"name": "4 Table Distributions",
+	"properties": {
+		"folder": {
+			"name": "Dedicated Sql Pool Scripts"
+		},
+		"content": {
+			"query": "--IMPLEMENTING TABLE DISTRIBUTIONS\n\n/*\n\nThere are Fixed 60 Distributions. \nHow Dedicated SQL Pool chooses the Distribution out of 60 TO Store the Data or Value?\n\nUsing Table Distribution Methods\n    1. Round Robin\n        - Default One\n        - Evenly Distribute Rows, each Distribution contains almost same number of rows.\n        - Fast Loading Data (Because Random Distribution)\n        - Slow Query (Scanning and Shuffling)\n        - Good For Staging and Temporary Tables\n    2. Hash\n        - Distribute based on given column, hash function.\n        - Based on Deterministic Hash Function. \n\t\t- Hash Value of the Columns\n        - Slow Data Loading, HASH before Loading\n        - Great Query Performance\n        - Good For Fact Tables or Large Dimension Tables\n    3. Replicate\n        - It is like Round Robin, but copy of the table is cached on the each Compute Node.\n        - Why we need that, it can be helpfull while Joining and Aggregations.\n        - Slow Loads and Updates. \n        - Fast Query\n        - Good For Small Dimension Tables.\n\n\n\n-- Do Further Study:\n    1. Regular SQL Entities:\n        - Indexes, Partitioning, Statistics\n        - Constraints, Identity\n    2. Materialized Views\n    3. Result Set Caching\n    4. DMVs\n    5. Workload Management\n    6. Data Security & Protection\n    7. Best Practices.\n*/\n\n-- FIRST CONNECT TO TaxiWarehouse (Dedicated SQL Pool)\n\n--CHeck Round Robin Distribution.\n\nCREATE TABLE main.YellowTaxis_RoundRobin\nWITH\n(\n    DISTRIBUTION = ROUND_ROBIN\n)\nAS\nSELECT * FROM ext.YellowTaxis;\n\n\n\n-- CHECK DISTRIBUTION COUNTS\n    -- ROws Will be distributed Evenly over 60 DIstribution.\nDBCC PDW_SHOWSPACEUSED('main.YellowTaxis_RoundRobin')\n\n\n\n-- HAsh Distribution\n    -- Use Column in HASH which used in WHERE, JOINS, Aggregate\n\nCREATE TABLE main.YellowTaxis_HASH\nWITH\n(\n    DISTRIBUTION = HASH(PULocationID)\n)\nAS\nSELECT * FROM ext.YellowTaxis;\n\n-- Data is not evenly Dsitributed over Distributions.\nDBCC PDW_SHOWSPACEUSED('main.YellowTaxis_HASH')\n\n\n\n\n-- DATA SHUFFLING IS EXTREMENLY COSTLY.\n/*\n    If you will join two tables, try to use HASH distribution on the Same Column in Both\n    Tables, they will be stored in the Same Compute Node and will not have Data Shuffling\n*/\n\n\n-- Run Query on Round Robin Table first.\n    -- It took 15 seconds torun\nSELECT \n    DATENAME(WEEKDAY, tpep_pickup_datetime),\n    AVG(\n        DATEDIFF(SECOND, tpep_pickup_datetime, tpep_dropoff_datetime)\n    )\nFROM main.YellowTaxis_RoundRobin\nGROUP BY \n    PULocationID,\n    DATENAME(WEEKDAY, tpep_pickup_datetime)\n\n\n\n-- RUn the same query on the HASH\n    -- It Took 9 seconds\nSELECT \n    DATENAME(WEEKDAY, tpep_pickup_datetime),\n    AVG(\n        DATEDIFF(SECOND, tpep_pickup_datetime, tpep_dropoff_datetime)\n    )\nFROM main.YellowTaxis_HASH\nGROUP BY \n    PULocationID,\n    DATENAME(WEEKDAY, tpep_pickup_datetime)\n\n\n\n\nCREATE TABLE dbo.T1\n(    C1 INT IDENTITY(1,1)    NOT NULL\n,    C2 VARCHAR(30)                NULL\n)\nWITH\n(   DISTRIBUTION = HASH(C2)\n,   CLUSTERED COLUMNSTORE INDEX\n)\n;\n\nINSERT INTO dbo.T1\nVALUES (NULL);\n\nINSERT INTO dbo.T1\nVALUES (NULL);\n\nSELECT *\nFROM dbo.T1;\n\nDBCC PDW_SHOWSPACEUSED('dbo.T1');",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"databaseName": "TaxiWarehouse",
+				"poolName": "TaxiWarehouse"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}

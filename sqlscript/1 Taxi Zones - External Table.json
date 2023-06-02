@@ -1,0 +1,20 @@
+{
+	"name": "1 Taxi Zones - External Table",
+	"properties": {
+		"folder": {
+			"name": "Dedicated Sql Pool Scripts"
+		},
+		"content": {
+			"query": "CREATE MASTER KEY;\n\nGO\n\n\nCREATE DATABASE SCOPED CREDENTIAL PSDatabaseCredential\nWITH\n    IDENTITY = 'user',\n    SECRET = '4bB6XjvmvAmKdtSIqY2R0gq0gy6jf52xgOOVP86RjmlhrrcXYqxPOSyfWFUZ5bnjgaMo6+2eWr3J+AStMHJJnA=='\n\n\n\nGO\n\nCREATE EXTERNAL DATA SOURCE PSDataLake\nWITH (\n    TYPE = HADOOP,\n    LOCATION = 'abfss://taxidata@synapsedatalakeadls2.dfs.core.windows.net',\n    CREDENTIAL = PSDatabaseCredential\n);\n\nGO \n\nCREATE EXTERNAL FILE FORMAT CSVFileFormat\nWITH (\n    FORMAT_TYPE = DELIMITEDTEXT,\n    FORMAT_OPTIONS (\n        FIELD_TERMINATOR = ',',\n        STRING_DELIMITER = '\"',\n        DATE_FORMAT = 'yyyy-MM-dd HH:mm:ss',\n        USE_TYPE_DEFAULT = FALSE,\n        FIRST_ROW = 2\n    )\n);\n\nGO\n\n\nCREATE SCHEMA ext;\n\n\nGO\n\n\nCREATE EXTERNAL TABLE ext.TaxiZones\n(\n    LocationId INT,\n    Borough NVARCHAR(100),\n    Zone NVARCHAR(100),\n    ServiceZone NVARCHAR(100)\n)\nWITH\n(\n    DATA_SOURCE = PSDataLake,\n    FILE_FORMAT = CSVFileFormat,\n    LOCATION = '/TaxiZones/',\n    REJECT_TYPE = VALUE,\n    -- We are going to ignore up to 10 error rows. If more than 10 Error Rows Query will fail.\n    REJECT_VALUE = 10,\n    REJECTED_ROW_LOCATION = '/Errors/TaxiZones'\n)\nGO\n\nSELECT * FROM sys.tables\n\n--DROP EXTERNAL TABLE ext.TaxiZones;\n\nSELECT TOP 100 * FROM ext.TaxiZones",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"databaseName": "TaxiWarehouse",
+				"poolName": "TaxiWarehouse"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}
