@@ -1,5 +1,5 @@
 {
-	"name": "3 Taxi Zones - COPY Table",
+	"name": "3 Taxi Zones - COPY Table - Dedicated Sql P",
 	"properties": {
 		"folder": {
 			"name": "Dedicated Sql Pool Scripts"
