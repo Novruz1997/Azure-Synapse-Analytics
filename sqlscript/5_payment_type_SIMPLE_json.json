@@ -1,5 +1,5 @@
 {
-	"name": "5_payment_type_json",
+	"name": "5_payment_type_SIMPLE_json",
 	"properties": {
 		"folder": {
 			"name": "nyc_taxi/Discovery"
