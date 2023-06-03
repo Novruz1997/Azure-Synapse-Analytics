@@ -1,0 +1,434 @@
+{
+	"name": "1-Spark-Notebook-Intro - Spark Pool",
+	"properties": {
+		"nbformat": 4,
+		"nbformat_minor": 2,
+		"bigDataPool": {
+			"referenceName": "PSSparkPool",
+			"type": "BigDataPoolReference"
+		},
+		"sessionProperties": {
+			"driverMemory": "28g",
+			"driverCores": 4,
+			"executorMemory": "28g",
+			"executorCores": 4,
+			"numExecutors": 2,
+			"runAsWorkspaceSystemIdentity": false,
+			"conf": {
+				"spark.dynamicAllocation.enabled": "false",
+				"spark.dynamicAllocation.minExecutors": "2",
+				"spark.dynamicAllocation.maxExecutors": "2",
+				"spark.autotune.trackingId": "4d2849cc-801c-4f4b-a965-7752d0730b34"
+			}
+		},
+		"metadata": {
+			"saveOutput": true,
+			"enableDebugMode": false,
+			"kernelspec": {
+				"name": "synapse_pyspark",
+				"display_name": "Synapse PySpark"
+			},
+			"language_info": {
+				"name": "python"
+			},
+			"a365ComputeOptions": {
+				"id": "/subscriptions/ae95e5eb-a461-45d6-a586-9c7b9f44daa8/resourceGroups/synapse-course-rg/providers/Microsoft.Synapse/workspaces/synapse-course-udemy-workspace/bigDataPools/PSSparkPool",
+				"name": "PSSparkPool",
+				"type": "Spark",
+				"endpoint": "https://synapse-course-udemy-workspace.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/PSSparkPool",
+				"auth": {
+					"type": "AAD",
+					"authResource": "https://dev.azuresynapse.net"
+				},
+				"sparkVersion": "3.3",
+				"nodeCount": 3,
+				"cores": 4,
+				"memory": 28,
+				"automaticScaleJobs": false
+			},
+			"sessionKeepAliveTimeout": 20
+		},
+		"cells": [
+			{
+				"cell_type": "code",
+				"source": [
+					"\"Hello World\""
+				],
+				"execution_count": 3
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"s = 1 + 1\n",
+					"\n",
+					"print(s)"
+				],
+				"execution_count": 4
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"fhvfileTaxisPath = 'abfss://taxidata@synapsedatalakeadls2.dfs.core.windows.net/fhvtaxis*.csv'\n",
+					""
+				],
+				"execution_count": 5
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"fhvTaxiTripDataDF = (\n",
+					"    spark\n",
+					"        .read\n",
+					"        .option(\"header\", \"true\")\n",
+					"        .option(\"inferSchema\", \"true\")\n",
+					"        .csv(fhvfileTaxisPath)\n",
+					")\n",
+					"\n",
+					"\n",
+					"fhvTaxiTripDataDF.printSchema"
+				],
+				"execution_count": 10
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					},
+					"collapsed": false
+				},
+				"source": [
+					"display(fhvTaxiTripDataDF.limit(100))"
+				],
+				"execution_count": 11
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"fhvTaxiTripDataDF.columns"
+				],
+				"execution_count": 12
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					},
+					"collapsed": false
+				},
+				"source": [
+					"from pyspark.sql.functions import * \n",
+					"\n",
+					"fhvTaxiTripDataDF = (\n",
+					"        fhvTaxiTripDataDF\n",
+					"            .select(\n",
+					"                'hvfhs_license_num',\n",
+					"                'dispatching_base_num',\n",
+					"                'pickup_datetime',\n",
+					"                'dropoff_datetime',\n",
+					"                'PULocationID',\n",
+					"                'DOLocationID'\n",
+					"            )\n",
+					"            .withColumnRenamed('hvfhs_license_num', 'CompanyLisenceId')\n",
+					"            .withColumnRenamed('dispatching_base_num', 'BaseLisenceId')\n",
+					"            .withColumnRenamed('pickup_datetime', 'PickupTime')\n",
+					"            .withColumnRenamed('dropoff_datetime', 'DropTime')\n",
+					"            .withColumnRenamed('PULocationID', 'PickupLocationId')\n",
+					"            .withColumnRenamed('DOLocationID', 'DropLocationId')\n",
+					"            .withColumn(\"TripYear\", year(col(\"PickupTime\")))\n",
+					"            .withColumn(\"TripMonth\", month(col(\"PickupTime\")))\n",
+					"            .withColumn(\"TripDay\", dayofmonth(col(\"PickupTime\")))\n",
+					"            .where(\"PickupTime >= '2019-11-01' AND PickupTime < '2019-12-01'\")\n",
+					")\n",
+					"\n",
+					"\n",
+					"display(fhvTaxiTripDataDF.limit(100))"
+				],
+				"execution_count": 15
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					},
+					"microsoft": {
+						"language": "sparksql"
+					},
+					"collapsed": false
+				},
+				"source": [
+					"%%sql\n",
+					"\n",
+					"CREATE DATABASE FhvWarehouse"
+				],
+				"execution_count": 16
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					},
+					"microsoft": {
+						"language": "sparksql"
+					},
+					"collapsed": false
+				},
+				"source": [
+					"%%sql \n",
+					"\n",
+					"\n",
+					"SHOW DATABASES"
+				],
+				"execution_count": 17
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"(\n",
+					"    fhvTaxiTripDataDF\n",
+					"        .write\n",
+					"        .partitionBy(\"TripYear\", \"TripMonth\", \"TripDay\")\n",
+					"        .mode(\"overwrite\")\n",
+					"        .parquet(\"abfss://taxioutput@synapsedatalakeadls2.dfs.core.windows.net/Facts/FhvTaxis.parquet\")\n",
+					")"
+				],
+				"execution_count": 18
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"(\n",
+					"    fhvTaxiTripDataDF\n",
+					"        .write\n",
+					"        .partitionBy(\"TripYear\", \"TripMonth\", \"TripDay\")\n",
+					"        .mode(\"overwrite\")\n",
+					"        .saveAsTable(\"FhvWarehouse.FHVTripsManaged\")\n",
+					")"
+				],
+				"execution_count": 19
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					},
+					"microsoft": {
+						"language": "sparksql"
+					},
+					"collapsed": false
+				},
+				"source": [
+					"%%sql\n",
+					"\n",
+					"\n",
+					"USE FhvWarehouse"
+				],
+				"execution_count": 20
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					},
+					"microsoft": {
+						"language": "sparksql"
+					},
+					"collapsed": false
+				},
+				"source": [
+					"%%sql\n",
+					"\n",
+					"SELECT * FROM FHVTripsManaged LIMIT 10"
+				],
+				"execution_count": 21
+			},
+			{
+				"cell_type": "markdown",
+				"metadata": {
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"*External Table*"
+				]
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"(\n",
+					"    fhvTaxiTripDataDF\n",
+					"        .write\n",
+					"        .partitionBy(\"TripYear\", \"TripMonth\", \"TripDay\")\n",
+					"        .mode(\"overwrite\")\n",
+					"        .option(\"path\", \"abfss://taxioutput@synapsedatalakeadls2.dfs.core.windows.net/Facts/FhvTaxis.parquet\")\n",
+					"        .saveAsTable(\"FhvWarehouse.FHVTrips\")\n",
+					")"
+				],
+				"execution_count": 23
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					},
+					"microsoft": {
+						"language": "sparksql"
+					},
+					"collapsed": false
+				},
+				"source": [
+					"%%sql\n",
+					"\n",
+					"SELECT * FROM FHVTrips LIMIT 10"
+				],
+				"execution_count": 24
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					""
+				],
+				"execution_count": null
+			}
+		]
+	}
+}
