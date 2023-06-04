@@ -1,0 +1,17 @@
+{
+	"name": "8_Selecting_From_Folder",
+	"properties": {
+		"content": {
+			"query": "-- This is auto-generated code\n\n\nUSE nyc_taxi_discovery\n\nSELECT * FROM sys.external_data_sources;\n\nGO\n-- SELECTING DATA FROM FOLDER\nSELECT\n    TOP 100 *\nFROM\n    OPENROWSET(\n        BULK 'trip_data_green_csv/year=2020/month=01/green_tripdata_2020-01.csv',\n        DATA_SOURCE = 'nyc_taxi_data_raw',\n        FORMAT = 'CSV',\n        PARSER_VERSION = '2.0',\n        HEADER_ROW = TRUE\n    ) AS [result]\n\n\n-- SELECT DATA FROM FOLDER\n\nSELECT\n    TOP 100 *\nFROM\n    OPENROWSET(\n        -- You can use wildchard character as well.\n        BULK 'trip_data_green_csv/year=2020/month=01/',\n        DATA_SOURCE = 'nyc_taxi_data_raw',\n        FORMAT = 'CSV',\n        PARSER_VERSION = '2.0',\n        HEADER_ROW = TRUE\n    ) AS [result]\n\n\n\n-- SELECTING FROM SUBFOLDERS\n-- If you want to select data from subfolders recursively, you should use double **. \nSELECT\n    TOP 100 *\nFROM\n    OPENROWSET(\n        BULK 'trip_data_green_csv/year=2020/**',\n        DATA_SOURCE = 'nyc_taxi_data_raw',\n        FORMAT = 'CSV',\n        PARSER_VERSION = '2.0',\n        HEADER_ROW = TRUE\n    ) AS [result]\n\n\n-- Select only from specific Subfolders\n\nSELECT\n    TOP 100 *\nFROM\n    OPENROWSET(\n        -- Use it within ()\n        BULK \n        ( \n            'trip_data_green_csv/year=2020/month=01/*',\n            'trip_data_green_csv/year=2020/month=02/*' \n        ),\n        DATA_SOURCE = 'nyc_taxi_data_raw',\n        FORMAT = 'CSV',\n        PARSER_VERSION = '2.0',\n        HEADER_ROW = TRUE\n    ) AS [result]\n\n",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"databaseName": "nyc_taxi_discovery",
+				"poolName": "Built-in"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}
