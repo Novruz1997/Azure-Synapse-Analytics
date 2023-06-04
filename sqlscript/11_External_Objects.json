@@ -1,5 +1,5 @@
 {
-	"name": "SQL script 1",
+	"name": "11_External_Objects",
 	"properties": {
 		"folder": {
 			"name": "nyc_taxi/ldw"
