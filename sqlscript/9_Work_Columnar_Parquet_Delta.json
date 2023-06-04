@@ -1,0 +1,17 @@
+{
+	"name": "9_Work_Columnar_Parquet_Delta",
+	"properties": {
+		"content": {
+			"query": "-- This is auto-generated code\nSELECT * FROM sys.external_data_sources\n\nSELECT\n    TOP 100 *\nFROM\n    OPENROWSET(\n        BULK 'trip_data_green_parquet/year=2020/month=01/',\n        -- Always specify the Data_Source when you refer folder rahter than entire link in the BULK\n        DATA_SOURCE = 'nyc_taxi_data_raw',\n        FORMAT = 'PARQUET'\n    ) AS [result]\n\n\n\n\n-- It infers data types correct because file is Parquet File\n-- But only for the String Characters it gives VARCHAR(8000) which is slow and costly\n-- Thats why most of the time even for parquet you manually specify the column types.\n\nEXEC sp_describe_first_result_set N'SELECT\n    TOP 100 *\nFROM\n    OPENROWSET(\n        BULK ''trip_data_green_parquet/year=2020/month=01/'',\n        DATA_SOURCE = ''nyc_taxi_data_raw'',\n        FORMAT = ''PARQUET''\n    ) AS [result]'\n\n\n\n-- Query from Delta File\n-- DElta stores in PArquet format, but you can UPDATE, Time Version with the help of _delta_log folder.\nSELECT\n    TOP 100 *\nFROM\n    OPENROWSET(\n        BULK 'trip_data_green_delta/',\n        -- Always specify the Data_Source when you refer folder rahter than entire link in the BULK\n        DATA_SOURCE = 'nyc_taxi_data_raw',\n        FORMAT = 'DELTA'\n    ) AS [result]\n\n\n\n-- You can choose the specified columns but only in the case when you specify the partitioning column names\n-- You should only specify the root folder in the BULK, because _delta_log folder is located in the Root. not in the individual partitions.\nSELECT\n    TOP 100 *\nFROM\n    OPENROWSET(\n        BULK 'trip_data_green_delta/',\n        DATA_SOURCE = 'nyc_taxi_data_raw',\n        FORMAT = 'DELTA'\n    )\n    WITH (\n        tip_amount FLOAT,\n        trip_type INT\n    ) AS [result]\n\n\n\n\n-- WHen you use WITH to specify the column dtypes and the columns you want to select in WITH.\n-- Always mention Partition Columns as well.\nSELECT\n    TOP 100 *\nFROM\n    OPENROWSET(\n        BULK 'trip_data_green_delta/',\n        DATA_SOURCE = 'nyc_taxi_data_raw',\n        FORMAT = 'DELTA'\n    )\n    WITH (\n        tip_amount FLOAT,\n        trip_type INT ,\n        -- Partitions\n        year VARCHAR(4),\n        month VARCHAR(2)      \n    ) AS [result]\n\n\n\n-- SELECTING DATA FROM SPECIFIC PARTITIONS\n\nSELECT\n    COUNT(DISTINCT payment_type)\nFROM\n    OPENROWSET(\n        BULK 'trip_data_green_delta/',\n        DATA_SOURCE = 'nyc_taxi_data_raw',\n        FORMAT = 'DELTA'\n    ) AS [result]\n-- specify Partition Columns and this will be very fast \nWHERE year = '2020' AND month = '01'\n\n\n\n-- DElta Lake Can Keep the history\n    -- In databricks or in spark pool you can select the data from the specific version.\n\n\n",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"databaseName": "nyc_taxi_discovery",
+				"poolName": "Built-in"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}
