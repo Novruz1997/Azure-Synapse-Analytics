@@ -5,12 +5,12 @@
 			"name": "nyc_taxi/ldw"
 		},
 		"content": {
-			"query": "/*\nYou can create a View by using Select Statement from either\n    1. External Table\n    2. OPENROWSET\n*/\n\n\n\n\n\n",
+			"query": "/*\nYou can create a View by using Select Statement from either\n    1. External Table\n    2. OPENROWSET\n*/\n\n\n\nUSE nyc_taxi_ldw;\n\nGO \n-- From OPENROWSET\nCREATE VIEW bronze.vw_rate_code\nAS \nSELECT \n    rate_code,\n    rate_code_id\n    FROM OPENROWSET(\n        BULK 'raw/rate_code.json',\n        DATA_SOURCE = 'nyc_taxi_src',\n        FORMAT = 'CSV',\n        FIELDTERMINATOR = '0x0b',\n        ROWTERMINATOR = '0x0b',\n        FIELDQUOTE = '0x0b'\n    )\nWITH (\n    jsonDoc NVARCHAR(MAX)\n) AS rate_code\nCROSS APPLY OPENJSON(jsonDoc)\nWITH (\n    rate_code_id TINYINT,\n    rate_code VARCHAR(20)\n);\n\n\n\nGO; \n\n\nSELECT TOP 100 * FROM bronze.vw_rate_code;\n\n",
 			"metadata": {
 				"language": "sql"
 			},
 			"currentConnection": {
-				"databaseName": "master",
+				"databaseName": "nyc_taxi_ldw",
 				"poolName": "Built-in"
 			},
 			"resultLimit": 5000
