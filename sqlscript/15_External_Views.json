@@ -1,0 +1,20 @@
+{
+	"name": "15_External_Views",
+	"properties": {
+		"folder": {
+			"name": "nyc_taxi/ldw"
+		},
+		"content": {
+			"query": "/*\n\nYou can create a View by using Select Statement from either\n    1. External Table\n    2. OPENROWSET\n*/\n",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"databaseName": "master",
+				"poolName": "Built-in"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}
