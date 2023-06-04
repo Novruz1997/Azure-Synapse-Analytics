@@ -5,12 +5,12 @@
 			"name": "nyc_taxi/ldw"
 		},
 		"content": {
-			"query": "",
+			"query": "USE nyc_taxi_ldw;\n\nGO \n\nIF NOT EXISTS (SELECT 1 FROM sys.external_file_formats WHERE name = 'parquet_file_format')\n    CREATE EXTERNAL FILE FORMAT parquet_file_format\n    WITH (\n        FORMAT_TYPE = PARQUET,\n        DATA_COMPRESSION = 'org.apache.hadoop.io.compress.SnappyCodec'\n    );\n\n\nGO \n\n\n",
 			"metadata": {
 				"language": "sql"
 			},
 			"currentConnection": {
-				"databaseName": "master",
+				"databaseName": "nyc_taxi_ldw",
 				"poolName": "Built-in"
 			},
 			"resultLimit": 5000
