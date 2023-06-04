@@ -1,0 +1,20 @@
+{
+	"name": "SQL script 1",
+	"properties": {
+		"folder": {
+			"name": "nyc_taxi/ldw"
+		},
+		"content": {
+			"query": "use master;\n\nGO\n\nCREATE DATABASE nyc_taxi_ldw;\n\nGO \n\n-- We will use `Latin1_General_100_BIN2_UTF8` collation\n-- Because string values in PARQUET file are encoded using UTF-8\n-- A mismatch between text encoding in Parquet File and Collation may lead problems in conversion\n\nALTER DATABASE nyc_taxi_ldw COLLATE Latin1_General_100_BIN2_UTF8;\n\nGO \n\nUSE nyc_taxi_ldw;\n\nGO \n\n\nCREATE SCHEMA bronze;\nGO\nCREATE SCHEMA silver;\nGO\nCREATE SCHEMA gold;\n\n\nGO \n\n\nCREATE EXTERNAL DATA SOURCE nyc_taxi_src\nWITH (\n    -- go to container in linked secrion - properties - copy url and paste here\n    LOCATION = 'https://synapsedatalakeadls2.dfs.core.windows.net/nyc-taxi-data'\n    -- We will not specify the Credential because right now we have an access to the Storage via AAD.\n);\n\nGO \n\n\n\n",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"databaseName": "nyc_taxi_ldw",
+				"poolName": "Built-in"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}
