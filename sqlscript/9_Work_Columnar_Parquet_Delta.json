@@ -1,0 +1,17 @@
+{
+	"name": "9_Work_Columnar_Parquet_Delta",
+	"properties": {
+		"content": {
+			"query": "-- This is auto-generated code\nSELECT * FROM sys.external_data_sources\n\nSELECT\n    TOP 100 *\nFROM\n    OPENROWSET(\n        BULK 'trip_data_green_parquet/year=2020/month=01/',\n        -- Always specify the Data_Source when you refer folder rahter than entire link in the BULK\n        DATA_SOURCE = 'nyc_taxi_data_raw',\n        FORMAT = 'PARQUET'\n    ) AS [result]\n\n\n\n\n-- It infers data types correct because file is Parquet File\nEXEC sp_describe_first_result_set N'SELECT\n    TOP 100 *\nFROM\n    OPENROWSET(\n        BULK ''trip_data_green_parquet/year=2020/month=01/'',\n        DATA_SOURCE = ''nyc_taxi_data_raw'',\n        FORMAT = ''PARQUET''\n    ) AS [result]'",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"databaseName": "nyc_taxi_discovery",
+				"poolName": "Built-in"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}
