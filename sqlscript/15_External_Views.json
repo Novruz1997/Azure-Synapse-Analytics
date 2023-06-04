@@ -5,7 +5,7 @@
 			"name": "nyc_taxi/ldw"
 		},
 		"content": {
-			"query": "/*\n\nYou can create a View by using Select Statement from either\n    1. External Table\n    2. OPENROWSET\n*/\n",
+			"query": "/*\nYou can create a View by using Select Statement from either\n    1. External Table\n    2. OPENROWSET\n*/\n\n\n\n\n\n",
 			"metadata": {
 				"language": "sql"
 			},
