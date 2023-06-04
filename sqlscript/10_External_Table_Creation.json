@@ -1,0 +1,20 @@
+{
+	"name": "10_External_Table_Creation",
+	"properties": {
+		"folder": {
+			"name": "nyc_taxi/Discovery"
+		},
+		"content": {
+			"query": "/*\n\nExternal Table \n\nIn Serverless Sql Pool , no option of storage. Data will always kept in the external Storage. \n\nTwo way of creating External Table in Serverless Sql Pool.\n\n1. CREATE EXTERNAL TABLE\n    - Create external table on top of the data already present in the storage\n    - Metadata only change\n\n2. CETAS (CREATE EXTERNAL TABLE AS SELECT)\n    - Selected data will copied to the location specified in the table definition\n    - Metadata Change + Data Copied\n*/\n\n-- To create external table we need\n    -- 1. External Data Source (Location of the storage, Credential, Data Source Type)\n            -- Data Source Type (ex: HADOOP) is available for Dedicated Sql Pool. For serverless Sql Pool\n                -- We will leave it blank\n    -- 2. External File Format\n",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"databaseName": "master",
+				"poolName": "Built-in"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}
