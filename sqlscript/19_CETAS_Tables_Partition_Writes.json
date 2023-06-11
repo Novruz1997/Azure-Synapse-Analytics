@@ -1,0 +1,20 @@
+{
+	"name": "19_CETAS_Tables_Partition_Writes",
+	"properties": {
+		"folder": {
+			"name": "nyc_taxi/ldw"
+		},
+		"content": {
+			"query": "-- USE CETAS to create a EXTERNAL PARTITIONED TABLE with the HELP of Stored \n-- PRODUCEDURE.\n-- BECAUSE CETAS does not have capacity to create external partitioned tables.\n-- It writes all data into 1 file.\n\n\n",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"databaseName": "master",
+				"poolName": "Built-in"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}
