@@ -5,7 +5,7 @@
 			"name": "nyc_taxi/ldw"
 		},
 		"content": {
-			"query": "-- Partition Prunnning is not possible in External Tables.\n\n\n-- Use filepath instead.\n\n",
+			"query": "-- Partition Prunnning is not possible in External Tables.\n\n\n-- Use filepath instead.\n\n/*\n\nExternal Tables cannot Prune Partitions. We cannot target to specific partition via \nexternal tables. \nWe do combination of VIEWS + OPENROWSET to do partition prunning for external tables. \n\n\nLets say the data in our Blob Storage is already partitioned and folder structure is like this.\n\n-raw_taxi_csv\n    - 2010 (year)\n        - 1 (month)\n        - 2 \n        - n\n    - 2011\n        - 1\n        -2 \n        - n\n\nWe see that above folder is already parttitioned and we want the data from 2020, month 1. \nBut in the files we don't have lets say Year and Month columns in our files.\nSo, we will not able to read data only from required partition in external table. It will read entire\ndata. But we can do this so, it will read only the date (partition) which we need .\n\n\n\n",
 			"metadata": {
 				"language": "sql"
 			},
